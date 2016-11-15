@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Anthony Ebert" />
+
+<meta name="date" content="2016-11-15" />
+
+<title>M/M/k queues</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">M/M/k queues</h1>
+<h4 class="author"><em>Anthony Ebert</em></h4>
+<h4 class="date"><em>2016-11-15</em></h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>The purpose of this vignette is to demonstrate how to use <code>queuecomputer</code> to understand M/M/k queues. We consider one M/M/1 queue and two M/M/3 queues. The working follows the theoretical results for M/M/k queues as shown in Thomopoulos, N (2012).</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(queuecomputer)</code></pre></div>
+<div id="queueing-functions" class="section level2">
+<h2>Queueing Functions</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">P_0_func &lt;-<span class="st"> </span>function(rho, k){
+  sum_i &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="ot">NA</span>, k)
+  
+  for(i in <span class="dv">0</span>:<span class="kw">I</span>(k<span class="dv">-1</span>))
+  {
+    sum_i[i<span class="dv">+1</span>] &lt;-<span class="st"> </span>rho^i /<span class="st"> </span><span class="kw">factorial</span>(i)
+  }
+  
+  p_0 &lt;-<span class="st"> </span><span class="dv">1</span>/(<span class="kw">sum</span>(sum_i) +<span class="st"> </span>rho^k/(<span class="kw">factorial</span>(k -<span class="st"> </span><span class="dv">1</span>) *<span class="st"> </span>(k -<span class="st"> </span>rho)))
+  <span class="kw">return</span>(p_0)
+}
+
+P_n &lt;-<span class="st"> </span>function(rho,n,k){
+  
+  p_0 &lt;-<span class="st"> </span><span class="kw">P_0_func</span>(rho, k)
+  if(n &lt;=<span class="st"> </span>k){
+    output &lt;-<span class="st"> </span>rho^n /<span class="st"> </span><span class="kw">factorial</span>(n) *<span class="st"> </span>p_0
+  } else {
+    output &lt;-<span class="st"> </span>rho^n /<span class="st"> </span>(<span class="kw">factorial</span>(k) *<span class="st"> </span>k^(n-k)) *<span class="st"> </span>p_0
+  }
+  <span class="kw">return</span>(output)
+}
+
+Lq &lt;-<span class="st"> </span>function(rho, k){
+  p_0 &lt;-<span class="st"> </span><span class="kw">P_0_func</span>(rho, k)
+  
+  output &lt;-<span class="st"> </span>p_0 *<span class="st"> </span>rho^{k<span class="dv">+1</span>} /<span class="st"> </span>( <span class="kw">factorial</span>(k<span class="dv">-1</span>) *<span class="st"> </span>(k -<span class="st"> </span>rho)^<span class="dv">2</span>)
+  <span class="kw">return</span>(output)
+}</code></pre></div>
+</div>
+<div id="setup" class="section level2">
+<h2>Setup</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">1</span>)
+
+n_customers &lt;-<span class="st"> </span><span class="dv">250000</span>
+
+lambda_a &lt;-<span class="st"> </span><span class="dv">1</span>/<span class="dv">1</span>
+lambda_s &lt;-<span class="st"> </span><span class="dv">1</span>/<span class="fl">0.8</span>
+
+interarrivals &lt;-<span class="st"> </span><span class="kw">rexp</span>(n_customers, lambda_a)
+
+arrivals &lt;-<span class="st"> </span><span class="kw">cumsum</span>(interarrivals)
+arrival_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">ID =</span> <span class="kw">c</span>(<span class="dv">1</span>:n_customers), <span class="dt">times =</span> arrivals)
+
+service &lt;-<span class="st"> </span><span class="kw">rexp</span>(n_customers, lambda_s)
+
+rho &lt;-<span class="st"> </span>(<span class="dv">1</span>/lambda_s) /<span class="st"> </span>(<span class="dv">1</span>/lambda_a)</code></pre></div>
+</div>
+<div id="mm1-queue" class="section level2">
+<h2>MM1 queue</h2>
+<div id="theoretical" class="section level3">
+<h3>Theoretical</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k =<span class="st"> </span><span class="dv">1</span>
+
+p_0 &lt;-<span class="st"> </span><span class="kw">P_n</span>(rho, <span class="dt">n=</span><span class="dv">0</span>, k)
+
+### System lengths -----------------------
+<span class="kw">Vectorize</span>(P_n, <span class="st">&quot;n&quot;</span>)(<span class="dt">rho=</span>rho, <span class="dt">n=</span><span class="kw">c</span>(<span class="dv">0</span>:<span class="dv">30</span>), <span class="dt">k =</span> k)</code></pre></div>
+<pre><code>##  [1] 0.2000000000 0.1600000000 0.1280000000 0.1024000000 0.0819200000
+##  [6] 0.0655360000 0.0524288000 0.0419430400 0.0335544320 0.0268435456
+## [11] 0.0214748365 0.0171798692 0.0137438953 0.0109951163 0.0087960930
+## [16] 0.0070368744 0.0056294995 0.0045035996 0.0036028797 0.0028823038
+## [21] 0.0023058430 0.0018446744 0.0014757395 0.0011805916 0.0009444733
+## [26] 0.0007555786 0.0006044629 0.0004835703 0.0003868563 0.0003094850
+## [31] 0.0002475880</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Estimated queue length -----------------
+LQ &lt;-<span class="st"> </span><span class="kw">Lq</span>(rho, k)
+
+### Estimated units in system -----------
+<span class="kw">Lq</span>(rho, k) +<span class="st"> </span>rho</code></pre></div>
+<pre><code>## [1] 4</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Ws =<span class="st"> </span><span class="dv">1</span>/lambda_s
+Wq =<span class="st"> </span>LQ /<span class="st"> </span>lambda_a
+W =<span class="st"> </span>Ws +<span class="st"> </span>Wq
+
+Wq <span class="co"># Mean waiting time (time in queue)</span></code></pre></div>
+<pre><code>## [1] 3.2</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">W <span class="co"># Mean response time (time in system)</span></code></pre></div>
+<pre><code>## [1] 4</code></pre>
+</div>
+<div id="observed" class="section level3">
+<h3>Observed</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM1 &lt;-<span class="st"> </span><span class="kw">queue_step</span>(<span class="dt">arrival_df =</span> arrival_df, <span class="dt">service =</span> service, <span class="dt">servers =</span> k)
+
+MM1_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(MM1)
+
+<span class="kw">signif</span>(MM1_summary$system_lengths, <span class="dv">4</span>)</code></pre></div>
+<pre><code>##         0         1         2         3         4         5         6 
+## 1.986e-01 1.615e-01 1.278e-01 1.028e-01 8.173e-02 6.645e-02 5.365e-02 
+##         7         8         9        10        11        12        13 
+## 4.304e-02 3.386e-02 2.646e-02 2.129e-02 1.751e-02 1.377e-02 1.082e-02 
+##        14        15        16        17        18        19        20 
+## 8.500e-03 6.622e-03 5.275e-03 4.236e-03 3.399e-03 2.697e-03 2.361e-03 
+##        21        22        23        24        25        26        27 
+## 1.768e-03 1.347e-03 1.082e-03 8.410e-04 5.812e-04 3.819e-04 3.082e-04 
+##        28        29        30        31        32        33        34 
+## 2.494e-04 2.290e-04 1.697e-04 1.285e-04 1.197e-04 1.069e-04 7.485e-05 
+##        35        36        37        38        39        40        41 
+## 3.322e-05 3.442e-05 3.162e-05 4.523e-05 2.842e-05 1.681e-05 1.161e-05 
+##        42 
+## 3.202e-06</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM1_summary$queue_lengths %*%<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>:<span class="kw">I</span>(<span class="kw">length</span>(MM1_summary$queue_lengths) -<span class="st"> </span><span class="dv">1</span>)) <span class="co"># Mean queue length</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 3.146248</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM1_summary$system_lengths %*%<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>:<span class="kw">I</span>(<span class="kw">length</span>(MM1_summary$system_lengths) -<span class="st"> </span><span class="dv">1</span>)) <span class="co"># Mean system length (number of customers in system)</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 3.947628</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM1_summary$mwt <span class="co"># Mean waiting time</span></code></pre></div>
+<pre><code>## [1] 3.144179</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM1_summary$mrt <span class="co"># Mean response time</span></code></pre></div>
+<pre><code>## [1] 3.945074</code></pre>
+</div>
+</div>
+<div id="mm3-queue" class="section level2">
+<h2>MM3 queue</h2>
+<div id="theoretical-1" class="section level3">
+<h3>Theoretical</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">k =<span class="st"> </span><span class="dv">3</span>
+
+p_0 &lt;-<span class="st"> </span><span class="kw">P_n</span>(rho, <span class="dv">0</span>, k)
+
+### System lengths -----------------------
+<span class="kw">Vectorize</span>(P_n, <span class="st">&quot;n&quot;</span>)(<span class="dt">rho=</span>rho, <span class="dt">n=</span><span class="kw">c</span>(<span class="dv">0</span>:<span class="dv">30</span>), <span class="dt">k =</span> k)</code></pre></div>
+<pre><code>##  [1] 4.471545e-01 3.577236e-01 1.430894e-01 3.815718e-02 1.017525e-02
+##  [6] 2.713400e-03 7.235732e-04 1.929529e-04 5.145410e-05 1.372109e-05
+## [11] 3.658958e-06 9.757221e-07 2.601926e-07 6.938468e-08 1.850258e-08
+## [16] 4.934022e-09 1.315739e-09 3.508638e-10 9.356368e-11 2.495031e-11
+## [21] 6.653417e-12 1.774245e-12 4.731319e-13 1.261685e-13 3.364493e-14
+## [26] 8.971982e-15 2.392529e-15 6.380076e-16 1.701354e-16 4.536943e-17
+## [31] 1.209851e-17</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Estimated queue length -----------------
+LQ &lt;-<span class="st"> </span><span class="kw">Lq</span>(rho, k)
+
+### Estimated units in system -----------
+<span class="kw">Lq</span>(rho, k) +<span class="st"> </span>rho</code></pre></div>
+<pre><code>## [1] 0.8189209</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">Ws =<span class="st"> </span><span class="dv">1</span>/lambda_s
+Wq =<span class="st"> </span>LQ /<span class="st"> </span>lambda_a
+W =<span class="st"> </span>Ws +<span class="st"> </span>Wq
+
+Wq <span class="co"># Mean waiting time (time in queue)</span></code></pre></div>
+<pre><code>## [1] 0.01892092</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">W <span class="co"># Mean response time (time in system)</span></code></pre></div>
+<pre><code>## [1] 0.8189209</code></pre>
+</div>
+</div>
+<div id="observed-1" class="section level2">
+<h2>Observed</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3 &lt;-<span class="st"> </span><span class="kw">queue_step</span>(<span class="dt">arrival_df =</span> arrival_df, <span class="dt">service =</span> service, <span class="dt">servers =</span> k)
+
+MM3_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(MM3)
+
+<span class="kw">signif</span>(MM3_summary$system_lengths, <span class="dv">4</span>)</code></pre></div>
+<pre><code>##         0         1         2         3         4         5         6 
+## 4.462e-01 3.582e-01 1.436e-01 3.821e-02 1.014e-02 2.731e-03 7.169e-04 
+##         7         8         9        10        11 
+## 1.769e-04 3.082e-05 1.361e-05 3.202e-06 2.001e-06</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_summary$queue_lengths %*%<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>:<span class="kw">I</span>(<span class="kw">length</span>(MM3_summary$queue_lengths) -<span class="st"> </span><span class="dv">1</span>)) <span class="co"># Mean queue length</span></code></pre></div>
+<pre><code>##            [,1]
+## [1,] 0.01873655</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_summary$system_lengths %*%<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>:<span class="kw">I</span>(<span class="kw">length</span>(MM3_summary$system_lengths) -<span class="st"> </span><span class="dv">1</span>)) <span class="co"># Mean system length (number of customers in system)</span></code></pre></div>
+<pre><code>##           [,1]
+## [1,] 0.8201465</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_summary$mwt <span class="co"># Mean waiting time</span></code></pre></div>
+<pre><code>## [1] 0.0187137</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_summary$mrt <span class="co"># Mean response time</span></code></pre></div>
+<pre><code>## [1] 0.8196092</code></pre>
+</div>
+<div id="mm3-queue-second" class="section level2">
+<h2>MM3 queue (second)</h2>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Setup ----------</span>
+
+<span class="kw">set.seed</span>(<span class="dv">2</span>)
+
+n_customers &lt;-<span class="st"> </span><span class="dv">250000</span>
+
+lambda_a &lt;-<span class="st"> </span><span class="dv">1</span>/<span class="dv">1</span>
+lambda_s &lt;-<span class="st"> </span><span class="dv">1</span>/<span class="fl">2.5</span>
+
+interarrivals &lt;-<span class="st"> </span><span class="kw">rexp</span>(n_customers, lambda_a)
+
+arrivals &lt;-<span class="st"> </span><span class="kw">cumsum</span>(interarrivals)
+arrival_df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">ID =</span> <span class="kw">c</span>(<span class="dv">1</span>:n_customers), <span class="dt">times =</span> arrivals)
+
+service &lt;-<span class="st"> </span><span class="kw">rexp</span>(n_customers, lambda_s)</code></pre></div>
+<div id="theoretical-2" class="section level3">
+<h3>Theoretical</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">rho &lt;-<span class="st"> </span>(<span class="dv">1</span>/lambda_s) /<span class="st"> </span>(<span class="dv">1</span>/lambda_a)
+
+<span class="co"># MM3 queue ------------------------------</span>
+
+k =<span class="st"> </span><span class="dv">3</span>
+
+## Theoretical -------------------
+
+p_0 &lt;-<span class="st"> </span><span class="kw">P_n</span>(rho, <span class="dv">0</span>, k)
+
+### System lengths -----------------------
+<span class="kw">Vectorize</span>(P_n, <span class="st">&quot;n&quot;</span>)(<span class="dt">rho=</span>rho, <span class="dt">n=</span><span class="kw">c</span>(<span class="dv">0</span>:<span class="dv">30</span>), <span class="dt">k =</span> k)</code></pre></div>
+<pre><code>##  [1] 0.0449438202 0.1123595506 0.1404494382 0.1170411985 0.0975343321
+##  [6] 0.0812786101 0.0677321751 0.0564434792 0.0470362327 0.0391968606
+## [11] 0.0326640505 0.0272200421 0.0226833684 0.0189028070 0.0157523392
+## [16] 0.0131269493 0.0109391244 0.0091159370 0.0075966142 0.0063305118
+## [21] 0.0052754265 0.0043961888 0.0036634906 0.0030529089 0.0025440907
+## [26] 0.0021200756 0.0017667297 0.0014722747 0.0012268956 0.0010224130
+## [31] 0.0008520108</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Estimated queue length -----------------
+LQ &lt;-<span class="st"> </span><span class="kw">Lq</span>(rho, k)
+
+### Estimated units in system -----------
+<span class="kw">Lq</span>(rho, k) +<span class="st"> </span>rho</code></pre></div>
+<pre><code>## [1] 6.011236</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">### Waiting times -----------
+Ws =<span class="st"> </span><span class="dv">1</span>/lambda_s
+Wq =<span class="st"> </span>LQ /<span class="st"> </span>lambda_a
+W =<span class="st"> </span>Ws +<span class="st"> </span>Wq
+
+Wq <span class="co"># Mean waiting time (time in queue)</span></code></pre></div>
+<pre><code>## [1] 3.511236</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">W <span class="co"># Mean response time (time in system)</span></code></pre></div>
+<pre><code>## [1] 6.011236</code></pre>
+</div>
+<div id="observed-2" class="section level3">
+<h3>Observed</h3>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_2 &lt;-<span class="st"> </span><span class="kw">queue_step</span>(<span class="dt">arrival_df =</span> arrival_df, <span class="dt">service =</span> service, <span class="dt">servers =</span> k)
+
+MM3_2_summary &lt;-<span class="st"> </span><span class="kw">summary</span>(MM3_2)
+
+<span class="kw">signif</span>(MM3_2_summary$system_lengths, <span class="dv">4</span>)</code></pre></div>
+<pre><code>##         0         1         2         3         4         5         6 
+## 4.486e-02 1.109e-01 1.377e-01 1.158e-01 9.756e-02 8.142e-02 6.784e-02 
+##         7         8         9        10        11        12        13 
+## 5.619e-02 4.724e-02 3.952e-02 3.270e-02 2.806e-02 2.242e-02 1.888e-02 
+##        14        15        16        17        18        19        20 
+## 1.519e-02 1.295e-02 1.104e-02 9.402e-03 7.739e-03 6.690e-03 5.541e-03 
+##        21        22        23        24        25        26        27 
+## 4.442e-03 3.859e-03 3.244e-03 2.623e-03 2.259e-03 2.232e-03 1.698e-03 
+##        28        29        30        31        32        33        34 
+## 1.580e-03 1.200e-03 1.099e-03 8.428e-04 7.594e-04 6.011e-04 5.342e-04 
+##        35        36        37        38        39        40        41 
+## 4.300e-04 3.823e-04 3.471e-04 3.062e-04 2.352e-04 2.364e-04 1.611e-04 
+##        42        43        44        45        46        47        48 
+## 1.964e-04 1.984e-04 1.647e-04 9.217e-05 7.935e-05 5.050e-05 4.168e-05 
+##        49        50        51        52        53        54        55 
+## 2.725e-05 4.008e-05 2.204e-05 2.525e-05 2.685e-05 2.244e-05 2.525e-05 
+##        56        57        58        59        60        61        62 
+## 1.924e-05 2.164e-05 4.248e-05 3.286e-05 4.328e-05 3.967e-05 1.202e-05 
+##        63        64        65        66        67        68        69 
+## 6.412e-06 8.015e-06 8.416e-06 2.405e-06 4.809e-06 9.618e-06 7.614e-06 
+##        70        71        72 
+## 4.408e-06 4.008e-07 1.603e-06</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_2_summary$queue_lengths %*%<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>:<span class="kw">I</span>(<span class="kw">length</span>(MM3_2_summary$queue_lengths) -<span class="st"> </span><span class="dv">1</span>)) <span class="co"># Mean queue length</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 3.646973</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_2_summary$system_lengths %*%<span class="st"> </span><span class="kw">c</span>(<span class="dv">0</span>:<span class="kw">I</span>(<span class="kw">length</span>(MM3_2_summary$system_lengths) -<span class="st"> </span><span class="dv">1</span>)) <span class="co"># Mean system length (number of customers in system)</span></code></pre></div>
+<pre><code>##          [,1]
+## [1,] 6.152826</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_2_summary$mwt <span class="co"># Mean waiting time</span></code></pre></div>
+<pre><code>## [1] 3.640104</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">MM3_2_summary$mrt <span class="co"># Mean response time</span></code></pre></div>
+<pre><code>## [1] 6.141271</code></pre>
+</div>
+</div>
+</div>
+<div id="bibliography" class="section level1">
+<h1>Bibliography</h1>
+<p>Thomopoulos, N (2012). Fundamentals of Queuing Systems: Statistical Methods for Analyzing Queuing Models. Springer Science &amp; Business Media</p>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
