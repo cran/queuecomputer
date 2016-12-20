@@ -12,7 +12,7 @@
 
 <meta name="author" content="Anthony Ebert" />
 
-<meta name="date" content="2016-11-15" />
+<meta name="date" content="2016-12-20" />
 
 <title>Using the queuecomputer package</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Using the queuecomputer package</h1>
 <h4 class="author"><em>Anthony Ebert</em></h4>
-<h4 class="date"><em>2016-11-15</em></h4>
+<h4 class="date"><em>2016-12-20</em></h4>
 
 
 
@@ -86,25 +86,25 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 arrivals &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">ID =</span> <span class="kw">c</span>(<span class="dv">1</span>:<span class="dv">100</span>), <span class="dt">times =</span> <span class="kw">cumsum</span>(<span class="kw">rexp</span>(<span class="dv">100</span>)))
 
 <span class="kw">head</span>(arrivals)</code></pre></div>
-<pre><code>##   ID    times
-## 1  1 1.272276
-## 2  2 1.661925
-## 3  3 3.328307
-## 4  4 3.912903
-## 5  5 4.732425
-## 6  6 6.490986</code></pre>
+<pre><code>##   ID     times
+## 1  1 0.3199780
+## 2  2 0.4630498
+## 3  3 0.7251302
+## 4  4 0.8995766
+## 5  5 0.9654777
+## 6  6 1.8800708</code></pre>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">service &lt;-<span class="st"> </span><span class="kw">rexp</span>(<span class="dv">100</span>)
 
 departures &lt;-<span class="st"> </span><span class="kw">queue_step</span>(<span class="dt">arrival_df =</span> arrivals, <span class="dt">service =</span> service)
 
 <span class="kw">head</span>(departures)</code></pre></div>
-<pre><code>##   ID     times
-## 1  1  5.479328
-## 2  2  9.850967
-## 3  3 11.724356
-## 4  4 12.663550
-## 5  5 14.345809
-## 6  6 14.363243</code></pre>
+<pre><code>##   ID    times
+## 1  1 0.580407
+## 2  2 4.037948
+## 3  3 4.622707
+## 4  4 5.465278
+## 5  5 6.134305
+## 6  6 7.953326</code></pre>
 </div>
 <div id="resourcing-schedule" class="section level1">
 <h1>Resourcing schedule</h1>
@@ -129,12 +129,12 @@ resource_schedule</code></pre></div>
 
 <span class="kw">head</span>(departures)</code></pre></div>
 <pre><code>##   ID    times
-## 1  1 14.20705
-## 2  2 18.57869
-## 3  3 20.45208
-## 4  4 21.39127
-## 5  5 23.07353
-## 6  6 23.09097</code></pre>
+## 1  1 10.26043
+## 2  2 13.71797
+## 3  3 14.30273
+## 4  4 15.14530
+## 5  5 15.81433
+## 6  6 17.63335</code></pre>
 <p>The <code>server.list</code> object is a list of step functions which represent each server, the range is <span class="math inline">\(\{0,1\}\)</span>, where 0 represents unavailable and 1 represents available and the knots represent the times where availability changes.</p>
 <p>The <code>as.server.list</code> function is used to create a <code>server.list</code> object.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="co"># Server 1 is available before time 10.</span>

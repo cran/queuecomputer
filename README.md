@@ -1,4 +1,6 @@
 
+[![CRAN\_Status\_Badge](http://www.r-pkg.org/badges/version/queuecomputer)](https://CRAN.R-project.org/package=queuecomputer) [![Downloads](http://cranlogs.r-pkg.org/badges/queuecomputer)](https://CRAN.R-project.org/package=queuecomputer) [![Build Status](https://travis-ci.org/AnthonyEbert/queuecomputer.svg?branch=simple_exports2)](https://travis-ci.org/AnthonyEbert/queuecomputer) [![codecov](https://codecov.io/gh/AnthonyEbert/queuecomputer/branch/master/graph/badge.svg)](https://codecov.io/gh/AnthonyEbert/queuecomputer)
+
 <!-- --- -->
 <!-- output: html -->
 <!-- bibliography: references.bib -->
@@ -30,7 +32,6 @@ Installation
 ------------
 
 ``` r
-# For the CRAN version (yet to be released)
 install.packages('queuecomputer')
 
 # For the in-development version
@@ -40,7 +41,7 @@ devtools::install_github("AnthonyEbert/queuecomputer")
 Usage
 -----
 
-In this example of a customers must pass through two queues. The arrival times to the first queue come in two waves starting at time 100 and time 500. The arrival times to the second queue are the departure times of the first queue plus the time they spent walking to the second queue.
+In this example of a queueing network, customers must pass through two queues. The arrival times to the first queue come in two waves starting at time 100 and time 500. The arrival times to the second queue are the departure times of the first queue plus the time they spent walking to the second queue.
 
 ``` r
 library(queuecomputer)
@@ -105,73 +106,61 @@ head(queue_2)
 
 summary(queue_1)
 #> 
+#> Missed customers:
+#>  0
 #> Mean waiting time:
 #>  11.3821
 #> Mean response time:
 #>  13.7479
 #> Utilization factor:
 #>  0.3841
-#> Queue Lengths:
-#>           0           1           2           3           4           5 
-#> 0.636038961 0.017694805 0.019155844 0.012824675 0.015584416 0.013474026 
-#>           6           7           8           9          10          11 
-#> 0.004870130 0.015584416 0.013474026 0.028571429 0.036201299 0.044805195 
-#>          12          13          14          15          16          17 
-#> 0.031331169 0.025974026 0.015584416 0.022564935 0.012012987 0.011525974 
-#>          18          19          20          21          22          23 
-#> 0.005681818 0.005681818 0.001461039 0.005519481 0.000974026 0.003409091 
+#> Queue Lengths (%):
+#>       0       1       2       3       4       5       6       7       8 
+#> 63.6000  1.7700  1.9200  1.2800  1.5600  1.3500  0.4870  1.5600  1.3500 
+#>       9      10      11      12      13      14      15      16      17 
+#>  2.8600  3.6200  4.4800  3.1300  2.6000  1.5600  2.2600  1.2000  1.1500 
+#>      18      19      20      21      22      23 
+#>  0.5680  0.5680  0.1460  0.5520  0.0974  0.3410 
 #> 
-#> System Lengths:
-#>           0           1           2           3           4           5 
-#> 0.608928571 0.013961039 0.013149351 0.017694805 0.019155844 0.012824675 
-#>           6           7           8           9          10          11 
-#> 0.015584416 0.013474026 0.004870130 0.015584416 0.013474026 0.028571429 
-#>          12          13          14          15          16          17 
-#> 0.036201299 0.044805195 0.031331169 0.025974026 0.015584416 0.022564935 
-#>          18          19          20          21          22          23 
-#> 0.012012987 0.011525974 0.005681818 0.005681818 0.001461039 0.005519481 
-#>          24          25 
-#> 0.000974026 0.003409091
+#> System Lengths (%):
+#>       0       1       2       3       4       5       6       7       8 
+#> 60.9000  1.4000  1.3100  1.7700  1.9200  1.2800  1.5600  1.3500  0.4870 
+#>       9      10      11      12      13      14      15      16      17 
+#>  1.5600  1.3500  2.8600  3.6200  4.4800  3.1300  2.6000  1.5600  2.2600 
+#>      18      19      20      21      22      23      24      25 
+#>  1.2000  1.1500  0.5680  0.5680  0.1460  0.5520  0.0974  0.3410
 
 summary(queue_2)
 #> 
+#> Missed customers:
+#>  0
 #> Mean waiting time:
 #>  34.0863
 #> Mean response time:
 #>  37.1955
 #> Utilization factor:
 #>  0.5192
-#> Queue Lengths:
-#>            0            1            2            3            4 
-#> 5.467902e-01 2.245596e-02 2.571166e-02 3.088739e-02 2.304032e-02 
-#>            5            6            7            8            9 
-#> 2.437599e-02 9.015778e-03 1.995158e-02 1.302279e-02 7.930545e-03 
-#>           10           11           12           13           14 
-#> 2.120377e-02 2.813257e-02 1.769764e-02 2.671342e-02 1.369063e-02 
-#>           15           16           17           18           19 
-#> 1.010101e-02 1.001753e-02 1.819851e-02 8.848819e-03 9.600134e-03 
-#>           20           21           22           23           24 
-#> 1.001753e-02 9.349695e-03 9.349695e-03 1.928375e-02 2.804909e-02 
-#>           25           26           27           28           29 
-#> 9.015778e-03 7.513148e-03 8.598380e-03 1.502630e-03 8.097504e-03 
-#>           30           31 
-#> 8.347942e-05 1.753068e-03 
+#> Queue Lengths (%):
+#>        0        1        2        3        4        5        6        7 
+#> 54.70000  2.25000  2.57000  3.09000  2.30000  2.44000  0.90200  2.00000 
+#>        8        9       10       11       12       13       14       15 
+#>  1.30000  0.79300  2.12000  2.81000  1.77000  2.67000  1.37000  1.01000 
+#>       16       17       18       19       20       21       22       23 
+#>  1.00000  1.82000  0.88500  0.96000  1.00000  0.93500  0.93500  1.93000 
+#>       24       25       26       27       28       29       30       31 
+#>  2.80000  0.90200  0.75100  0.86000  0.15000  0.81000  0.00835  0.17500 
 #> 
-#> System Lengths:
-#>            0            1            2            3            4 
-#> 4.809250e-01 6.586526e-02 2.245596e-02 2.571166e-02 3.088739e-02 
-#>            5            6            7            8            9 
-#> 2.304032e-02 2.437599e-02 9.015778e-03 1.995158e-02 1.302279e-02 
-#>           10           11           12           13           14 
-#> 7.930545e-03 2.120377e-02 2.813257e-02 1.769764e-02 2.671342e-02 
-#>           15           16           17           18           19 
-#> 1.369063e-02 1.010101e-02 1.001753e-02 1.819851e-02 8.848819e-03 
-#>           20           21           22           23           24 
-#> 9.600134e-03 1.001753e-02 9.349695e-03 9.349695e-03 1.928375e-02 
-#>           25           26           27           28           29 
-#> 2.804909e-02 9.015778e-03 7.513148e-03 8.598380e-03 1.502630e-03 
-#>           30           31           32 
-#> 8.097504e-03 8.347942e-05 1.753068e-03
+#> System Lengths (%):
+#>        0        1        2        3        4        5        6        7 
+#> 48.10000  6.59000  2.25000  2.57000  3.09000  2.30000  2.44000  0.90200 
+#>        8        9       10       11       12       13       14       15 
+#>  2.00000  1.30000  0.79300  2.12000  2.81000  1.77000  2.67000  1.37000 
+#>       16       17       18       19       20       21       22       23 
+#>  1.01000  1.00000  1.82000  0.88500  0.96000  1.00000  0.93500  0.93500 
+#>       24       25       26       27       28       29       30       31 
+#>  1.93000  2.80000  0.90200  0.75100  0.86000  0.15000  0.81000  0.00835 
+#>       32 
+#>  0.17500
 
 curve(ecdf(arrival_df1$times)(x) * 200 , from = 0, to = 1500,
     xlab = "time", ylab = "Number of customers")
@@ -192,3 +181,10 @@ More information
 ----------------
 
 For more information on how to use the package see the package vignettes or the R help files.
+
+Acknowledgements
+----------------
+
+I'd like to thank my supervisors [Professor Kerrie Mengersen](https://bragqut.wordpress.com/mengersen/), [Dr Paul Wu](https://bragqut.wordpress.com/people/research-staff/wu/) and [Professor Fabrizio Ruggeri](http://www.mi.imati.cnr.it/fabrizio/).
+
+This work was supported by the [ARC Centre of Excellence for Mathematical and Statistical Frontiers (ACEMS)](http://acems.org.au/). This work was funded through the ARC Linkage Grant “Improving the Productivity and Efficiency of Australian Airports” (LP140100282).
