@@ -1,49 +1,92 @@
 
-#' Compute resource statistics from queue_df object
-#' @param object an object of class \code{queue_df}, the result of a call to \code{queue_step}.
-#' @param ... futher arguments to be passed to or from other methods.
-#' @return A list of performance statistics for the queue. "Mean waiting time": The mean time each customer had to wait in queue for service. "Mean response time": The mean time that each customer spends in the system (departure time - arrival time). "Utilization factor": The ratio of available time for all servers and time all servers were used. It can be greater than one if a customer arrives near the end of a shift and keeps a server busy. "Queue Lengths" and "System Lengths", the proportion of time for each queue length or number of customers in the system.
-#' @examples
-#' set.seed(1L)
-#' n_customers <- 100
-#' arrival_df <- data.frame(ID = c(1:n_customers), times = rlnorm(n_customers, meanlog = 3))
-#' service <- rexp(n_customers)
-#' queue <- queue_step(arrival_df = arrival_df, service = service)
-#' summary(queue)
-#'
+
+
+
+
+#' Summary method for queue_list object
 #' @export
-summary.queue_df <- function(object, ...){
+#' @param object an object of class \code{queue_list}, the result of a call to \code{queue_step}.
+#' @param ... futher arguments to be passed to or from other methods.
+summary.queue_list <- function(object, ...){
 
-  queue_df = object
+  # Non-standard evaluation binding
 
-  stopifnot(all(queue_df$times == Inf) == FALSE)
+  arrivals <- NULL
+  service <- NULL
+  departures <- NULL
+  response <- NULL
+  waiting <- NULL
+  times <- NULL
 
-  arrival_df = attr(queue_df, "arrival_df")
-  arrival_df$service = attr(queue_df, "service")
+  # Number of customers
 
-  serviced_customers = is.finite(queue_df$times)
+  n <- length(object$departures_df$departures)
 
-  response_time <- queue_df$times - arrival_df$times
-  waiting_time <- queue_df$times - arrival_df$service - arrival_df$times
+  # Missed customers and initial input
 
-  mean_response_time <- mean(response_time[serviced_customers])
-  mean_waiting_time <- mean(waiting_time[serviced_customers])
+  missed_customers = length(
+    which(
+      is.infinite(object$departures_df$departures)
+    )
+  )
 
-  n_customers <- dim(queue_df)[1]
+  departures_df <- object$departures_df %>%
+    dplyr::filter(is.finite(departures))
+  queuelength_df <- object$queuelength_df %>%
+    dplyr::filter(is.finite(times))
+  systemlength_df <- object$systemlength_df %>%
+    dplyr::filter(is.finite(times))
+  servers_input <- object$servers_input
 
-  max_time <- max(queue_df$times[serviced_customers])
+  # Compute response times and waiting times
 
-  queue_lengths <- round((stats::ecdf(arrival_df$times)(seq(0, max_time, by = 0.1)) - stats::ecdf(queue_df$times - arrival_df$service)(seq(0, max_time, by = 0.1)) ) * n_customers)
+  departures_df <- departures_df %>%
+    dplyr::mutate(
+      response = departures - arrivals,
+      waiting = departures - arrivals - service
+    )
 
-  system_lengths <- round((stats::ecdf(arrival_df$times)(seq(0, max_time, by = 0.1)) - stats::ecdf(queue_df$times)(seq(0, max_time, by = 0.1)) ) * n_customers)
+  departures_df$server <- factor(departures_df$server)
+  departures_sum <- summary(departures_df)
 
-  queue_lengths <- (summary(as.factor(queue_lengths))/(length(seq(0, max_time, by = 0.1))))
-  system_lengths <- (summary(as.factor(system_lengths))/(length(seq(0, max_time, by = 0.1))))
+  mwt <- mean(departures_df$waiting)
+  mrt <- mean(departures_df$response)
 
-  if("server.stepfun" %in% class(attr(queue_df, "servers_input"))){
+  # Summarise queuelengths
 
-    x = attr(queue_df, "servers_input")$x
-    y = attr(queue_df, "servers_input")$y
+  qlength_sum <- ql_summary(
+    queuelength_df$times, queuelength_df$queuelength
+  )
+
+  slength_sum <- ql_summary(
+    systemlength_df$times, systemlength_df$queuelength
+  )
+
+  qlength_mean <- average_queue(queuelength_df$times, queuelength_df$queuelength)
+
+  slength_mean <- average_queue(systemlength_df$times, systemlength_df$queuelength)
+
+  # Utilisation
+
+  max_time <- max(departures_df$departures)
+
+  if("numeric" %in% class(object$servers_input)){
+
+    n_server <- object$servers_input
+
+    service_available <- integrate_stepfun(x = c(1), y = c(n_server, n_server),
+      last = max_time)
+
+    service_rendered <- sum(departures_df$service)
+
+    utilization <- service_rendered/service_available
+  }
+
+
+  if("server.stepfun" %in% class(object$servers_input)){
+
+    x = object$servers_input$x
+    y = object$servers_input$y
 
     if(y[length(x)] == 0){
       last_server_time = x[length(x)]
@@ -53,54 +96,81 @@ summary.queue_df <- function(object, ...){
 
     service_available <- integrate_stepfun(x = x, y = y, last = max(max_time, last_server_time))
 
-    service_rendered <- sum(arrival_df$service[serviced_customers])
+    service_rendered <- sum(departures_df$service)
+
     utilization <- service_rendered/service_available
   }
 
-  if("numeric" %in% class(attr(queue_df, "servers_input"))){
+  output_list <- list(
+    number_customers = n,
+    missed_customers = missed_customers,
+    qlength_sum = qlength_sum,
+    qlength_mean = qlength_mean,
+    slength_sum = slength_sum,
+    slength_mean = slength_mean,
+    mrt = mrt,
+    mwt = mwt,
+    departures_sum = departures_sum,
+    utilization = utilization
+  )
 
-    service_available <- integrate_stepfun(x = c(1), y = c(attr(queue_df, "servers_input"), attr(queue_df, "servers_input")),
-      last = max_time)
+  class(output_list) <- c("summary_queue_list", "list")
 
-    service_rendered <- sum(arrival_df$service[serviced_customers])
-    utilization <- service_rendered/service_available
-  }
+  return(output_list)
 
-  if("server.list" %in% class(attr(queue_df, "servers_input"))){
-    warning("utilization ratio not yet available for queue with server.list input")
-
-    utilization <- NA
-  }
-
-  missed_customers <- length(queue_df$times) - length(queue_df$times[serviced_customers])
-
-  output <- list(mc = missed_customers, mrt = mean_response_time, mwt = mean_waiting_time, queue_lengths = queue_lengths,
-    system_lengths = system_lengths, utilization = utilization)
-  attr(output, "data") <- data.frame(response_time = response_time, waiting_time = waiting_time)
-
-  class(output) <- c("summary_queue_df", "list")
-
-  return(output)
 }
 
-#' Print method for output of \code{summary.queue_df}.
-#' @param x an object of class \code{summary_queue_df}, the result of a call to \code{summary.queue_df()}.
+
+
+
+
+
+
+
+#' Print method for output of \code{summary.queue_list}.
+#' @param x an object of class \code{summary_queue_list}, the result of a call to \code{summary.queue_list()}.
 #' @param ... futher arguments to be passed to or from other methods.
-#' @return A list of performance statistics for the queue. "Mean waiting time": The mean time each customer had to wait in queue for service. "Mean response time": The mean time that each customer spends in the system (departure time - arrival time). "Utilization factor": The ratio of available time for all servers and time all servers were used. It can be greater than one if a customer arrives near the end of a shift and keeps a server busy. "Queue Lengths" and "System Lengths", the proportion of time for each queue length or number of customers in the system.
+#' @return A list of performance statistics for the queue:
+#'
+#' "Total customers": Total customers in sinulation,
+#'
+#' "Missed customers": Customers who never saw a server,
+#'
+#' "Mean waiting time": The mean time each customer had to wait in queue for service,
+#'
+#' "Mean response time": The mean time that each customer spends in the system (departure time - arrival time),
+#'
+#' "Utilization factor": The ratio of available time for all servers and time all servers were used. It can be greater than one if a customer arrives near the end of a shift and keeps a server busy,
+#'
+#' "Mean queue length": Average queue length, and
+#'
+#' "Mean number of customers in system": Average number of customers in queue or currently being served.
+#' @examples
+#' n <- 1e3
+#' arrivals <- cumsum(rexp(n, 1.8))
+#' service <- rexp(n)
+#'
+#' queue_obj <- queue_step(arrivals, service, servers = 2)
+#' summary(queue_obj)
 #' @export
-print.summary_queue_df <- function(x, ...){
-  cat("\nMissed customers:\n", paste(signif(x$mc)))
-  cat("\nMean waiting time:\n", paste(signif(x$mwt)))
-  cat("\nMean response time:\n", paste(signif(x$mrt)))
-  cat("\nUtilization factor:\n", paste(signif(x$utilization, 4)))
-  cat("\nQueue Lengths (%):\n")
-  print(signif(x$queue_lengths * 100, 3))
-  cat("\nSystem Lengths (%):\n")
-  print(signif(x$system_lengths * 100, 3))
+print.summary_queue_list <- function(x, ...){
+  sig <- 3
+
+  cat("Total customers:\n", paste(x$n, ...))
+  cat("\nMissed customers:\n", paste(x$missed_customers), ...)
+  cat("\nMean waiting time:\n", paste(signif(x$mwt, sig)), ...)
+  cat("\nMean response time:\n", paste(signif(x$mrt, sig)), ...)
+  cat("\nUtilization factor:\n", paste(signif(x$utilization, sig)), ...)
+  cat("\nMean queue length:\n", paste(signif(x$qlength_mean, sig)), ...)
+  cat("\nMean number of customers in system:\n", paste(signif(x$slength_mean, sig)), ...)
 }
 
-integrate_stepfun <- function(x, y, last = 1000){
-  x <- c(0,x,last)
-  x_diff <- diff(x)
-  return(y %*% x_diff)
-}
+
+
+
+
+
+
+
+
+

@@ -137,3 +137,60 @@ as.server.list <- function(times, init){
 }
 
 
+
+
+
+do_func_ignore_things <- function(data, what){
+  acceptable_args <- data[names(data) %in% (formals(what) %>% names)]
+
+  do.call(what, acceptable_args %>% as.list)
+}
+
+
+
+check_queueinput <- function(arrivals, service, departures = NULL){
+  stopifnot(all(service >= 0))
+  stopifnot(all(arrivals >= 0))
+  stopifnot(length(arrivals) == length(service))
+  #stopifnot(anyNA(c(arrivals, service)) == FALSE )
+  stopifnot(is.numeric(arrivals))
+  stopifnot(is.numeric(service))
+
+  if(!is.null(departures)){
+    stopifnot(all(departures >= 0))
+    stopifnot(length(departures) == length(service))
+    #stopifnot(anyNA(departures) == FALSE )
+    stopifnot(is.numeric(departures))
+  }
+}
+
+
+
+generate_input <- function(mag = 3){
+  n <- 10^mag
+  arrivals <- cumsum(rexp(n))
+  service <- stats::rexp(n)
+  departures <- queue(arrivals, service, 1)
+
+  output <- list(arrivals = arrivals, service = service, departures = departures)
+
+  return(output)
+}
+
+integrate_stepfun <- function(x, y, last = 1000){
+  x <- c(0,x,last)
+  x_diff <- diff(x)
+  return((y %*% x_diff) %>% as.numeric)
+}
+
+#' print method for objects of class \code{queue_list}
+#' @export
+#' @param x an object of class \code{queue_list} produced by the \code{\link{queue_step}} function.
+#' @param ... further arguments to be passed to other methods
+print.queue_list <- function(x, ...){
+  print(x$departures_df, ...)
+}
+
+
+
+

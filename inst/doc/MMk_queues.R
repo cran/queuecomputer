@@ -38,7 +38,7 @@ Lq <- function(rho, k){
 
 set.seed(1)
 
-n_customers <- 250000
+n_customers <- 1e6
 
 lambda_a <- 1/1
 lambda_s <- 1/0.8
@@ -46,7 +46,6 @@ lambda_s <- 1/0.8
 interarrivals <- rexp(n_customers, lambda_a)
 
 arrivals <- cumsum(interarrivals)
-arrival_df <- data.frame(ID = c(1:n_customers), times = arrivals)
 
 service <- rexp(n_customers, lambda_s)
 
@@ -63,9 +62,10 @@ Vectorize(P_n, "n")(rho=rho, n=c(0:30), k = k)
 
 ### Estimated queue length -----------------
 LQ <- Lq(rho, k)
+LQ
 
 ### Estimated units in system -----------
-Lq(rho, k) + rho
+LQ + rho
 
 Ws = 1/lambda_s
 Wq = LQ / lambda_a
@@ -77,14 +77,17 @@ W # Mean response time (time in system)
 
 ## ------------------------------------------------------------------------
 
-MM1 <- queue_step(arrival_df = arrival_df, service = service, servers = k)
+MM1 <- queue_step(arrivals = arrivals, service = service, servers = k)
 
 MM1_summary <- summary(MM1)
 
-signif(MM1_summary$system_lengths, 4)
+MM1_summary$slength_sum
 
-MM1_summary$queue_lengths %*% c(0:I(length(MM1_summary$queue_lengths) - 1)) # Mean queue length
-MM1_summary$system_lengths %*% c(0:I(length(MM1_summary$system_lengths) - 1)) # Mean system length (number of customers in system)
+# Mean queue length
+MM1_summary$qlength_mean
+
+# Mean system length (number of customers in system)
+MM1_summary$slength_mean
 
 MM1_summary$mwt # Mean waiting time
 MM1_summary$mrt # Mean response time
@@ -100,9 +103,10 @@ Vectorize(P_n, "n")(rho=rho, n=c(0:30), k = k)
 
 ### Estimated queue length -----------------
 LQ <- Lq(rho, k)
+LQ
 
 ### Estimated units in system -----------
-Lq(rho, k) + rho
+LQ + rho
 
 Ws = 1/lambda_s
 Wq = LQ / lambda_a
@@ -115,14 +119,17 @@ W # Mean response time (time in system)
 ## ------------------------------------------------------------------------
 
 
-MM3 <- queue_step(arrival_df = arrival_df, service = service, servers = k)
+MM3 <- queue_step(arrivals = arrivals, service = service, servers = k)
 
 MM3_summary <- summary(MM3)
 
-signif(MM3_summary$system_lengths, 4)
+MM3_summary$slength_sum
 
-MM3_summary$queue_lengths %*% c(0:I(length(MM3_summary$queue_lengths) - 1)) # Mean queue length
-MM3_summary$system_lengths %*% c(0:I(length(MM3_summary$system_lengths) - 1)) # Mean system length (number of customers in system)
+# Mean queue length
+MM3_summary$qlength_mean
+
+# Mean system length (number of customers in system)
+MM3_summary$slength_mean
 
 MM3_summary$mwt # Mean waiting time
 MM3_summary$mrt # Mean response time
@@ -132,9 +139,10 @@ MM3_summary$mrt # Mean response time
 
 # Setup ----------
 
+
 set.seed(2)
 
-n_customers <- 250000
+n_customers <- 1e6
 
 lambda_a <- 1/1
 lambda_s <- 1/2.5
@@ -142,9 +150,10 @@ lambda_s <- 1/2.5
 interarrivals <- rexp(n_customers, lambda_a)
 
 arrivals <- cumsum(interarrivals)
-arrival_df <- data.frame(ID = c(1:n_customers), times = arrivals)
 
 service <- rexp(n_customers, lambda_s)
+
+rho <- (1/lambda_s) / (1/lambda_a)
 
 
 ## ------------------------------------------------------------------------
@@ -164,9 +173,10 @@ Vectorize(P_n, "n")(rho=rho, n=c(0:30), k = k)
 
 ### Estimated queue length -----------------
 LQ <- Lq(rho, k)
+LQ
 
 ### Estimated units in system -----------
-Lq(rho, k) + rho
+LQ + rho
 
 ### Waiting times -----------
 Ws = 1/lambda_s
@@ -180,14 +190,17 @@ W # Mean response time (time in system)
 ## ------------------------------------------------------------------------
 
 
-MM3_2 <- queue_step(arrival_df = arrival_df, service = service, servers = k)
+MM3_2 <- queue_step(arrivals = arrivals, service = service, servers = k)
 
 MM3_2_summary <- summary(MM3_2)
 
-signif(MM3_2_summary$system_lengths, 4)
+MM3_2_summary$slength_sum
 
-MM3_2_summary$queue_lengths %*% c(0:I(length(MM3_2_summary$queue_lengths) - 1)) # Mean queue length
-MM3_2_summary$system_lengths %*% c(0:I(length(MM3_2_summary$system_lengths) - 1)) # Mean system length (number of customers in system)
+# Mean queue length
+MM3_2_summary$qlength_mean
+
+# Mean system length (number of customers in system)
+MM3_2_summary$slength_mean
 
 MM3_2_summary$mwt # Mean waiting time
 MM3_2_summary$mrt # Mean response time
