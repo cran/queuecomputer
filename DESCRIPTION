@@ -1,6 +1,6 @@
 Package: queuecomputer
 Title: Computationally Efficient Queue Simulation
-Version: 0.8.1
+Version: 0.8.2
 Authors@R: person("Anthony", "Ebert", email = "anthonyebert+CRAN@gmail.com",
                    role = c("aut", "cre"))
 Description: Implementation of a computationally efficient method for
@@ -10,14 +10,14 @@ License: GPL (>= 2)
 Encoding: UTF-8
 LazyData: true
 Imports: stats, Rcpp, tidyr, dplyr
-RoxygenNote: 5.0.1.9000
+RoxygenNote: 6.0.1
 Suggests: knitr, rmarkdown, testthat, ggplot2
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0)
 URL: https://github.com/AnthonyEbert/queuecomputer
 NeedsCompilation: yes
-Packaged: 2017-04-11 12:15:36 UTC; ebertac
+Packaged: 2017-11-17 07:24:54 UTC; ebertac
 Author: Anthony Ebert [aut, cre]
 Maintainer: Anthony Ebert <anthonyebert+CRAN@gmail.com>
 Repository: CRAN
-Date/Publication: 2017-04-11 12:28:08 UTC
+Date/Publication: 2017-11-17 07:30:46 UTC

@@ -28,6 +28,10 @@ The focus on this package is:
 
 It is up to the user to provide arrival and service times, and therefore very complicated distributions can be simulated (by the user) and tested with this package.
 
+For detailed information regarding the algorithm used in this package see our arXiv preprint:
+
+Ebert, A., Wu, P., Mengersen, K., & Ruggeri, F. (2017). [Computationally Efficient Simulation of Queues: The R Package queuecomputer](https://arxiv.org/abs/1703.02151). arXiv preprint arXiv:1703.02151.
+
 Installation
 ------------
 
@@ -75,7 +79,7 @@ queue_2 <- queue_step(arrivals = arrivals_2, service = service_2, servers = 1)
 head(arrivals_1)
 #> [1] 100.7552 101.9368 102.0825 102.2223 102.6584 105.5534
 head(queue_1$departures_df)
-#> # A tibble: 6 × 6
+#> # A tibble: 6 x 6
 #>   arrivals   service departures       waiting system_time server
 #>      <dbl>     <dbl>      <dbl>         <dbl>       <dbl>  <dbl>
 #> 1 100.7552 0.1890576   100.9442 -6.383782e-15   0.1890576      1
@@ -87,7 +91,7 @@ head(queue_1$departures_df)
 head(arrivals_2)
 #> [1] 120.3923 105.6711 227.5242 175.9008 339.9853 108.7119
 head(queue_2$departures_df)
-#> # A tibble: 6 × 6
+#> # A tibble: 6 x 6
 #>   arrivals   service departures       waiting system_time server
 #>      <dbl>     <dbl>      <dbl>         <dbl>       <dbl>  <dbl>
 #> 1 120.3923 5.1599751   125.5523 -2.664535e-15    5.159975      1
@@ -129,11 +133,6 @@ summary(queue_2)
 #> Mean number of customers in system:
 #>  6.21
 ```
-
-More information
-----------------
-
-For more information on how to use the package see the package vignettes or the R help files.
 
 Acknowledgements
 ----------------
