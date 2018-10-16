@@ -1,10 +1,10 @@
 
 
-#' ggplot method for output from queueing model
+#' ggplot2 method for output from queueing model
 #' @importFrom dplyr row_number
 #' @export
 #' @param x an object of class \code{queue_list}
-#' @param which Numeric vector of integers from 1 to 7 which represents which plots are to be created. See examples.
+#' @param which Numeric vector of integers from 1 to 6 which represents which plots are to be created. See examples.
 #' @param annotated logical, if \code{TRUE} annotations will be added to the plot.
 #' @param ... other parameters to be passed through to plotting functions.
 #' @examples

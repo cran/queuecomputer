@@ -2,21 +2,21 @@
 % Please edit documentation in R/plot_functions.R
 \name{plot.queue_list}
 \alias{plot.queue_list}
-\title{ggplot method for output from queueing model}
+\title{ggplot2 method for output from queueing model}
 \usage{
 \method{plot}{queue_list}(x, which = c(2:6), annotated = TRUE, ...)
 }
 \arguments{
 \item{x}{an object of class \code{queue_list}}
 
-\item{which}{Numeric vector of integers from 1 to 7 which represents which plots are to be created. See examples.}
+\item{which}{Numeric vector of integers from 1 to 6 which represents which plots are to be created. See examples.}
 
 \item{annotated}{logical, if \code{TRUE} annotations will be added to the plot.}
 
 \item{...}{other parameters to be passed through to plotting functions.}
 }
 \description{
-ggplot method for output from queueing model
+ggplot2 method for output from queueing model
 }
 \examples{
 if(require(ggplot2, quietly = TRUE)){

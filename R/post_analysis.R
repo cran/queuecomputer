@@ -6,7 +6,7 @@
 #' Summary method for queue_list object
 #' @export
 #' @param object an object of class \code{queue_list}, the result of a call to \code{queue_step}.
-#' @param ... futher arguments to be passed to or from other methods.
+#' @param ... further arguments to be passed to or from other methods.
 summary.queue_list <- function(object, ...){
 
   # Non-standard evaluation binding
@@ -88,13 +88,7 @@ summary.queue_list <- function(object, ...){
     x = object$servers_input$x
     y = object$servers_input$y
 
-    if(y[length(x)] == 0){
-      last_server_time = x[length(x)]
-    } else {
-      last_server_time = 0
-    }
-
-    service_available <- integrate_stepfun(x = x, y = y, last = max(max_time, last_server_time))
+    service_available <- integrate_stepfun(x = x, y = y, last = max_time)
 
     service_rendered <- sum(departures_df$service)
 
@@ -136,10 +130,10 @@ summary.queue_list <- function(object, ...){
 
 #' Print method for output of \code{summary.queue_list}.
 #' @param x an object of class \code{summary_queue_list}, the result of a call to \code{summary.queue_list()}.
-#' @param ... futher arguments to be passed to or from other methods.
+#' @param ... further arguments to be passed to or from other methods.
 #' @return A list of performance statistics for the queue:
 #'
-#' "Total customers": Total customers in sinulation,
+#' "Total customers": Total customers in simulation,
 #'
 #' "Missed customers": Customers who never saw a server,
 #'
