@@ -1,4 +1,4 @@
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(queuecomputer)
 library(dplyr)
 
@@ -10,9 +10,9 @@ service <- rexp(100)
 
 departures <- queue_step(arrivals = arrivals, service = service)
 
-print(departures, n = 6)
+str(departures,1)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Zero servers available before time 10
 # One server available between time 10 and time 50
 # Three servers available between time 50 and time 100
@@ -23,15 +23,15 @@ resource_schedule
 
 departures <- queue_step(arrivals = arrivals, service = service, servers = resource_schedule)
 
-print(departures, n = 6)
+str(departures,1)
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 # Server 1 is available before time 10.
 # Server 2 is available between time 15 and time 30.
 # Server 3 is available after time 10. 
 as.server.list(list(10, c(15,30), 10), c(1,0,0))
 
-## ------------------------------------------------------------------------
+## -----------------------------------------------------------------------------
 library(queuecomputer)
 library(dplyr)
 

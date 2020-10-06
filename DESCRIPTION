@@ -1,30 +1,32 @@
 Package: queuecomputer
 Title: Computationally Efficient Queue Simulation
-Version: 0.8.3
+Version: 1.0.0
 Authors@R: c(person("Anthony", "Ebert", email = "anthonyebert+CRAN@gmail.com",
                    role = c("aut", "cre"), comment=c(ORCID="0000-0003-3002-6300")), 
              person("Kerrie", "Mengersen", role = "ths"), 
              person("Paul", "Wu", role = "ths"), 
              person("Fabrizio", "Ruggeri", role = "ths"))
 Description: Implementation of a computationally efficient method for
-    simulating queues with arbitrary arrival and service times.
+    simulating queues with arbitrary arrival and service times. 
+    Please see Ebert, Wu, Mengersen & Ruggeri (2020, <doi:10.18637/jss.v095.i05>) 
+    for further details. 
 Depends: R (>= 3.3)
 License: GPL-2 | file LICENSE
 Encoding: UTF-8
 LazyData: true
-Imports: stats, Rcpp, tidyr, dplyr
-RoxygenNote: 6.1.0
+Imports: stats, Rcpp, tidyr, dplyr, utils
+RoxygenNote: 7.1.0
 Suggests: knitr, rmarkdown, testthat, ggplot2
 VignetteBuilder: knitr
 LinkingTo: Rcpp, RcppArmadillo (>= 0.7.500.0.0)
 URL: https://github.com/AnthonyEbert/queuecomputer
 Copyright: file COPYRIGHTS
 NeedsCompilation: yes
-Packaged: 2018-10-16 18:49:38 UTC; ebertac
+Packaged: 2020-10-06 10:43:12 UTC; eberta
 Author: Anthony Ebert [aut, cre] (<https://orcid.org/0000-0003-3002-6300>),
   Kerrie Mengersen [ths],
   Paul Wu [ths],
   Fabrizio Ruggeri [ths]
 Maintainer: Anthony Ebert <anthonyebert+CRAN@gmail.com>
 Repository: CRAN
-Date/Publication: 2018-10-16 20:10:03 UTC
+Date/Publication: 2020-10-06 11:50:02 UTC
